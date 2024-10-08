@@ -2,7 +2,9 @@
 using Blog.Database.Entities;
 using Blog.Dtos;
 using Blog.Utilities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace Blog.Endpoints;
 
@@ -43,7 +45,6 @@ public sealed class PostsEndpoints : IEndpoints
                 x.FullDescription,
                 x.User!.Email
             }));
-
         });
 
         group.MapGet("{id:Guid}", async (BlogDbContext context, string id, CancellationToken cancellationToken) =>
@@ -60,16 +61,18 @@ public sealed class PostsEndpoints : IEndpoints
             return Results.Ok(new { result.Id, result.ShortDescription, result.FullDescription });
         });
 
-        group.MapPost("", async (BlogDbContext context, CreatePostDto post) =>
+        group.MapPost("", async (BlogDbContext context, CreatePostDto post, IHttpContextAccessor contextAccessor) =>
         {
+            var userId = contextAccessor.HttpContext?.User.Claims.FirstOrDefault(x => x.Type == JwtRegisteredClaimNames.Jti)!.Value!;
+
             var newPost = new Post
             {
                 Id = Guid.NewGuid().ToString(),
                 Title = post.Title,
-                DateCreated = DateTime.Now,
+                DateCreated = DateTime.UtcNow,
                 FullDescription = post.FullDescription,
                 ShortDescription = post.ShortDescription,
-                UserId = Guid.NewGuid().ToString()
+                UserId = userId
             };
 
             context.Posts.Add(newPost);
@@ -77,7 +80,7 @@ public sealed class PostsEndpoints : IEndpoints
             await context.SaveChangesAsync();
 
             return Results.Accepted();
-        });
+        }).RequireAuthorization();
 
         group.MapPut("", async (BlogDbContext context, UpdatePostDto post) =>
         {
