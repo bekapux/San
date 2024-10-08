@@ -56,7 +56,7 @@ builder.Services.AddCors((o) => o.AddPolicy("default", policy =>
 }));
 
 builder.Services.AddDbContextPool<BlogDbContext>(opt =>
-    opt.UseNpgsql(builder.Configuration.GetConnectionString("Default")));
+    opt.UseSqlite(builder.Configuration.GetConnectionString("Default")));
 
 builder.Services.AddIdentity<User, IdentityRole>(x =>
 {
