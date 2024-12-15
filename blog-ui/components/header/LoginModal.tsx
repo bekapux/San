@@ -4,6 +4,7 @@ import { IoMdClose } from "react-icons/io";
 import { SignIn } from "@/actions/authActions";
 
 function LoginModal() {
+  const [errorMessage, setErrorMessage] = useState("");
   const [showModal, setShowModal] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -15,7 +16,8 @@ function LoginModal() {
   async function handleSubmit() {
     const response = await SignIn(email, password);
 
-    if (!response) {
+    if (!response.status) {
+      setErrorMessage(response.data);
       return;
     }
 
@@ -60,6 +62,13 @@ function LoginModal() {
                   />
                 </div>
               </div>
+              {errorMessage && (
+                <div className="flex justify-center mb-2">
+                  <div className="flex flex-col text-start">
+                    <div className="text-red-700">• {errorMessage}</div>
+                  </div>
+                </div>
+              )}
               <div
                 onClick={handleSubmit}
                 className="bg-black text-white border rounded-3xl py-2 px-14 cursor-pointer"

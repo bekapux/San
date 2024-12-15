@@ -2,12 +2,12 @@
 
 import { IoMdClose } from "react-icons/io";
 import { useCallback, useState } from "react";
-import { SignIn } from "@/actions/authActions";
 import { Register } from "@/actions/authActions";
 
 function RegistrationModal() {
   const [showModal, setShowModal] = useState(false);
-  const [erroMessage, setErrorMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+  const [successResponse, setSuccessResponse] = useState(false);
   const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
   const [firstName, setFirstName] = useState("");
@@ -21,6 +21,7 @@ function RegistrationModal() {
 
   async function handleSubmit() {
     setErrorMessage([]);
+    setSuccessResponse(false);
     const response = await Register(
       email,
       username,
@@ -38,6 +39,10 @@ function RegistrationModal() {
       ]);
 
       return;
+    }
+
+    if (success) {
+      setSuccessResponse(true);
     }
   }
 
@@ -120,14 +125,24 @@ function RegistrationModal() {
                   />
                 </div>
               </div>
-              {erroMessage.length > 0 && (
+              {errorMessage.length > 0 && (
                 <div className="flex justify-center mb-2">
                   <div className="flex flex-col text-start">
-                    {erroMessage.map((message, index) => (
+                    {errorMessage.map((message, index) => (
                       <div key={index} className="text-red-700">
                         • {message}
                       </div>
                     ))}
+                  </div>
+                </div>
+              )}
+              {successResponse && (
+                <div className="flex justify-center mb-2">
+                  <div className="flex flex-col text-start">
+                    <div className="text-green-700">
+                      • Registration Was Successful! Please Close This Window
+                      And Sign In!
+                    </div>
                   </div>
                 </div>
               )}

@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import Cookies from "js-cookie";
-import { RiAddLargeLine } from "react-icons/ri";
+import { AiOutlineFileAdd } from "react-icons/ai";
 
 function Logout({ firstname = undefined }) {
   function handleLogout() {
@@ -23,7 +23,7 @@ function Logout({ firstname = undefined }) {
           <div className="flex flex-col justify-center text-xl">
             <Link href={"./createBlog"}>
               {" "}
-              <RiAddLargeLine />
+              <AiOutlineFileAdd />
             </Link>
           </div>
         </>
