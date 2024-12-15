@@ -7,17 +7,17 @@ import { useInView } from "react-intersection-observer";
 
 function BlogList({ initialList }) {
   const [blogs, setBlogs] = useState(initialList);
-  const [pagesFetched, setPagesFetched] = useState(2);
+  const [pageToFetch, setPageToFetch] = useState(2);
   const { ref, inView } = useInView();
   const [allBlogsFetched, setAllBlogsFetched] = useState(false);
 
   async function loadMoreBlogs() {
     if (!allBlogsFetched) {
-      const moreBlogs = await getBlogs(pagesFetched);
+      const moreBlogs = await getBlogs(pageToFetch);
 
       if (moreBlogs.length > 0) {
         setBlogs((blogs) => [...blogs, ...moreBlogs]);
-        setPagesFetched((pages) => pages + 1);
+        setPageToFetch((pages) => pages + 1);
       } else if (moreBlogs.length === 0) {
         setAllBlogsFetched(true);
       }
@@ -46,6 +46,7 @@ function BlogList({ initialList }) {
             return (
               <BlogCard
                 key={index}
+                id={blog.id}
                 title={blog.title}
                 email={blog.email}
                 shortDescription={blog.shortDescription}

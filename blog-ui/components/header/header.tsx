@@ -5,8 +5,8 @@ import Sidebar from "./Sidebar";
 import Logout from "./Logout";
 import { cookies } from "next/headers";
 
-function Header() {
-  const cookieStore = cookies();
+async function Header() {
+  const cookieStore = await cookies();
   const isAuthenticated = !!cookieStore.get("token")?.value;
   let firstname;
 
@@ -24,7 +24,9 @@ function Header() {
         <div className="hidden sm:flex gap-3">
           {isAuthenticated ? (
             <>
-              <Logout firstname={firstname} />
+              <Logout
+                firstname={firstname[0].toUpperCase() + firstname.slice(1)}
+              />
             </>
           ) : (
             <>

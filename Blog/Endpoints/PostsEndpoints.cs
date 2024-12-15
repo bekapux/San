@@ -28,6 +28,7 @@ public sealed class PostsEndpoints : IEndpoints
                 .Paginate(pageNumber, itemsPerPage)
                 .Select(x => new Post
                 {
+                    Id = x.Id,
                     Title = x.Title,
                     ShortDescription = x.ShortDescription,
                     FullDescription = x.FullDescription,
@@ -40,6 +41,7 @@ public sealed class PostsEndpoints : IEndpoints
 
             return Results.Ok(result.Select(x => new
             {
+                x.Id,
                 x.Title,
                 x.ShortDescription,
                 x.FullDescription,
@@ -58,7 +60,7 @@ public sealed class PostsEndpoints : IEndpoints
                 return Results.NotFound("");
             }
 
-            return Results.Ok(new { result.Id, result.ShortDescription, result.FullDescription });
+            return Results.Ok(new { result.Id, result.UserId, result.Title, result.ShortDescription, result.FullDescription });
         });
 
         group.MapPost("", async (BlogDbContext context, CreatePostDto post, IHttpContextAccessor contextAccessor) =>

@@ -1,6 +1,5 @@
 import { getBlogs } from "@/actions/authActions";
 import BlogList from "@/components/blogs/BlogList";
-import BlogCard from "@/components/blogs/blogCard";
 
 async function Blogs() {
   const blogList = await getBlogs(1);
@@ -20,6 +19,7 @@ async function Blogs() {
   }
 
   return blogList.length > 0 ? (
+    // დაფეჩილი სია გადაეცემა კლიენტურ BlogList-ს რომ მერე იქ ინფინიტ სქროლმა იმუშაოს
     <BlogList initialList={blogList} />
   ) : (
     <main className="flex flex-1 justify-center">
